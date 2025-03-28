@@ -1,9 +1,27 @@
 import * as readline from "readline";
 import { addTask, listTasks, completeTask } from "./model";
+import Task from "./interface";
 const menuString = `
 Task Management System
 q. QUIT
+l. LIST
+a. ADD
+c. COMPLETE
+Please select an option:
 `;
+
+const Header: string = `
+------------Task List-----------
+ID| Title| Status
+--------------------------------`;
+
+const rowString = (task: Task) => {
+  const str = `${task.id} | ${task.title} | ${
+    task.completed ? "Completed" : "Not Completed"
+  }
+--------------------------------`;
+  return str;
+};
 
 export default function showMenu(onQuit: () => void): void {
   const rl = readline.createInterface({
@@ -25,10 +43,11 @@ export default function showMenu(onQuit: () => void): void {
         });
         break;
       case "l":
-        rl.question("list tasks", () => {
-          console.log(listTasks());
-          displayMenu();
+        console.log(Header);
+        listTasks().forEach((task) => {
+          console.log(rowString(task));
         });
+        displayMenu();
         break;
       case "c":
         rl.question("Please input task ID:", (input: string) => {
